@@ -49,7 +49,7 @@ public class Airport {
 	 * 
 	 */
 	public String getCode() {
-		return code;
+		return this.code;
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class Airport {
 	 * 
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
