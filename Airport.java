@@ -34,7 +34,7 @@ public class Airport {
 			case "DTW": 
 				this.name = "Detroit Metro Airport";
 			case "ATL":
-				this.name = "Atlanta Airport";
+				this.name = "Hartsfield-Jackson Atlanta International Airport";
 			case "JFK":
 				this.name = "John F. Kennedy International Airport";
 			case "MIA":
