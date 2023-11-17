@@ -2,8 +2,8 @@ package flightRoutePlanner;
 
 public class Airport {
 
-	String code;
-	String name;
+	private String code;
+	private String name;
 
 	public Airport(String code, String name) {
 
