@@ -5,10 +5,41 @@ public class Airport {
 	private String code;
 	private String name;
 
-	public Airport(String code, String name) {
-
+	public Airport(String code) {
 		this.code = code;
-		this.name = name;
+
+		switch(code) {
+			case "SEA":
+				this.name = "Seattle International Airport";
+			case "SFO":
+				this.name = "San Francisco International Airport";
+			case "LAX":
+				this.name = "Los Angeles International Airport";
+			case "LAS":
+				this.name = "Harry Reid International Airport";
+			case "PHX":
+				this.name = "Phoenix Sky Harbor International Airport";
+			case "SLC":
+				this.name = "Salt Lake City International Airport";
+			case "DEN":
+				this.name = "Denver International Airport";
+			case "DFW":
+				this.name = "Dallas Fort Worth International Airport";
+			case "IAH":
+				this.name = "George Bush Intercontinental Airport";
+			case "MSP":
+				this.name = "Minneapolis-Saint Paul International Airport";
+			case "ORD":
+				this.name = "Chicago O'Hare International Airport";
+			case "DTW": 
+				this.name = "Detroit Metro Airport";
+			case "ATL":
+				this.name = "Atlanta Airport";
+			case "JFK":
+				this.name = "John F. Kennedy International Airport";
+			case "MIA":
+				this.name = "Miami International Airport";
+		}
 	}
 
 	/**
@@ -22,16 +53,6 @@ public class Airport {
 	}
 
 	/**
-	 * Set code for airport
-	 * 
-	 * @param String 
-	 * 
-	 */
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	/**
 	 * Get name of the airport
 	 * 
 	 * @return String
@@ -39,16 +60,6 @@ public class Airport {
 	 */
 	public String getName() {
 		return name;
-	}
-
-	/**
-	 * Set name for airport 
-	 * 
-	 * @param String name
-	 * 
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	@Override
