@@ -23,7 +23,7 @@ import edu.princeton.cs.algs4.ST;
  *
  *	Based on code by Robert Sedgewick and Kevin Wayne.	
  *
- *	@author Jesse Cherry and Chanphone Visathip
+ *	@authors Jesse Cherry and Chanphone Visathip
  */
 public class FlightSymbolGraph {
     private ST<String, Integer> st;  // string -> index
