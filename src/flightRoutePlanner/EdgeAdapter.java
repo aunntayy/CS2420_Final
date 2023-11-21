@@ -3,9 +3,10 @@ package flightRoutePlanner;
 import edu.princeton.cs.algs4.Edge;
 
 /**
- * This class helps generate weights (cost and duration) for FlightSymbolGraph.
+ * This class helps generate weights (cost and duration) for FlightSymbolGraph
+ * by adapting the class Edge from Sedgewick's Algs4.
  *
- *@authors Chanphone Visathip and Jesse Cherry
+ * @authors Chanphone Visathip and Jesse Cherry
  *
  */
 public class EdgeAdapter extends Edge {
