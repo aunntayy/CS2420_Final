@@ -30,6 +30,8 @@ public class FlightSymbolGraph {
     private String[] keys;           // index  -> string
     private Graph graph;             // the underlying graph
 
+    // TODO implement edge-weighting for flight cost and duration
+    
     /**
      * Initializes a graph from a file using the specified delimiter.
      * Each line in the file contains
