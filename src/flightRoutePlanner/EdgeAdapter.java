@@ -1,15 +1,13 @@
 package flightRoutePlanner;
 
 import edu.princeton.cs.algs4.Edge;
+
 /**
- * This class help generate weigh for graph
+ * This class helps generate weights (cost and duration) for FlightSymbolGraph.
  *
  *@authors Chanphone Visathip and Jesse Cherry
  *
  */
-
-
-	
 public class EdgeAdapter extends Edge {
 	private final double flightTime;	// weight2
 	
