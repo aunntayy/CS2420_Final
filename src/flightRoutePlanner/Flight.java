@@ -4,7 +4,12 @@ import edu.princeton.cs.algs4.Graph;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.SymbolGraph;
-
+/**
+ * This class is the contains method for flight and generate the output.
+ * 
+ * @authors Chanphone Visathip and Jesse Cherry
+ * 
+ */
 public class Flight {
 
 	private Airport depart;
