@@ -1,5 +1,10 @@
 package flightRoutePlanner;
 
+import edu.princeton.cs.algs4.Graph;
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.SymbolGraph;
+
 public class Flight {
 
 	private Airport depart;
@@ -87,4 +92,27 @@ public class Flight {
 		this.cost = cost;
 	}
 
+	
+	public static void main(String[] args) {
+		 String filename  = "src/flightRoutePlanner/Flights.txt";//args[0
+	        String delimiter = " ";//args[1]
+	        SymbolGraph sg = new SymbolGraph(filename, delimiter);
+	        Graph graph = sg.graph();
+	    	StdOut.print("Airport: ");
+	        while (StdIn.hasNextLine()) {   
+	        
+	            String source = StdIn.readLine();
+	            if (sg.contains(source)) {
+	                int s = sg.indexOf(source);
+	                for (int v : graph.adj(s)) {
+	                    StdOut.println("   " + sg.nameOf(v));
+	                }
+	            }
+	            else {
+	                StdOut.println("input not contain '" + source + "'");
+	            }
+	            StdOut.println();
+	        	StdOut.print("Airport: ");
+	        }
+	}
 }
