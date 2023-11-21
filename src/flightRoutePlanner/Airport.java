@@ -1,5 +1,12 @@
 package flightRoutePlanner;
 
+/**
+ * Class Airport creates an Airport object defined by its code and name.
+ * Airports act as vertices for the graph created by FlightSymbolGraph.
+ * 
+ * @author Jesse Cherry and Chanphone Visathip
+ *
+ */
 public class Airport {
 
 	private String code;
