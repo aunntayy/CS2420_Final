@@ -6,7 +6,7 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.SymbolGraph;
 
 /**
- * Class Flight contains methods for flights between airports and generates output.
+ * Class Flight contains methods for flights between airports.
  * 
  * @authors Chanphone Visathip and Jesse Cherry
  * 
