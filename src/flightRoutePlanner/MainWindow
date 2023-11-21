@@ -10,7 +10,7 @@ import edu.princeton.cs.algs4.StdOut;
  * creates a FlightSymbolGraph from a given file to create a graph of airports 
  * and flights.
  * 
- * @author Jesse Cherry and Chanphone Visathip
+ * @authors Jesse Cherry and Chanphone Visathip
  *
  */
 public class MainWindow {
@@ -34,7 +34,7 @@ public class MainWindow {
                 }
             }
             else {
-                StdOut.println("   " + "input not contain '" + source + "'");
+                StdOut.println("   " + "Graph does not contain '" + source + "'");
             }
             StdOut.println();
         	StdOut.print("Airport code: ");
