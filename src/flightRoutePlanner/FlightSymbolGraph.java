@@ -23,15 +23,16 @@ import edu.princeton.cs.algs4.ST;
  *
  *	Based on code by Robert Sedgewick and Kevin Wayne.	
  *
- *	@authors Jesse Cherry and Chanphone Visathip
+ *	@author Jesse Cherry 
+ *  @author Chanphone Visathip
  */
 public class FlightSymbolGraph {
-    private ST<String, Integer> st;  // string -> index
-    private String[] keys;           // index  -> string
-    private Graph graph;             // the underlying graph
-
-    // TODO implement edge-weighting for flight cost and duration
+    private ST<String, Integer> st;  	// string -> index
+    private String[] keys;           	// index  -> string
+    private DualWeightedGraph graph;	// the underlying graph
     
+    // TODO implement edge-weighting for flight cost and duration
+
     /**
      * Initializes a graph from a file using the specified delimiter.
      * Each line in the file contains
@@ -63,14 +64,16 @@ public class FlightSymbolGraph {
 
         // second pass builds the graph by connecting first vertex on each
         // line to all others
-        graph = new Graph(st.size());
+        graph = new DualWeightedGraph(st.size());
         in = new In(filename);
         while (in.hasNextLine()) {
             String[] a = in.readLine().split(delimiter);
             int v = st.get(a[0]);
-            for (int i = 1; i < a.length; i++) {
+            for (int i = 1; i + 2 < a.length; i+=3) {
                 int w = st.get(a[i]);
-                graph.addEdge(v, w);
+                double cost = Double.parseDouble(a[i + 1]);
+                double flightTime = Double.parseDouble(a[i + 2]);
+                graph.addEdge(v, w, cost, flightTime);
             }
         }
     }
@@ -88,35 +91,11 @@ public class FlightSymbolGraph {
      * Returns the integer associated with the vertex named {@code s}.
      * @param s the name of a vertex
      * @return the integer (between 0 and <em>V</em> - 1) associated with the vertex named {@code s}
-     * @deprecated Replaced by {@link #indexOf(String)}.
-     */
-    @Deprecated
-    public int index(String s) {
-        return st.get(s);
-    }
-
-
-    /**
-     * Returns the integer associated with the vertex named {@code s}.
-     * @param s the name of a vertex
-     * @return the integer (between 0 and <em>V</em> - 1) associated with the vertex named {@code s}
      */
     public int indexOf(String s) {
         return st.get(s);
     }
 
-    /**
-     * Returns the name of the vertex associated with the integer {@code v}.
-     * @param  v the integer corresponding to a vertex (between 0 and <em>V</em> - 1)
-     * @return the name of the vertex associated with the integer {@code v}
-     * @throws IllegalArgumentException unless {@code 0 <= v < V}
-     * @deprecated Replaced by {@link #nameOf(int)}.
-     */
-    @Deprecated
-    public String name(int v) {
-        validateVertex(v);
-        return keys[v];
-    }
 
     /**
      * Returns the name of the vertex associated with the integer {@code v}.
@@ -133,21 +112,19 @@ public class FlightSymbolGraph {
      * Returns the graph associated with the symbol graph. It is the client's responsibility
      * not to mutate the graph.
      * @return the graph associated with the symbol graph
-     * @deprecated Replaced by {@link #graph()}.
      */
-    @Deprecated
-    public Graph G() {
+    public DualWeightedGraph graph() {
         return graph;
     }
 
-    /**
-     * Returns the graph associated with the symbol graph. It is the client's responsibility
-     * not to mutate the graph.
-     * @return the graph associated with the symbol graph
-     */
-    public Graph graph() {
-        return graph;
+    public double getCost(int v, int w) {
+    	return graph.getCost(v, w);
     }
+    
+    public double getFlightTime(int v, int w) {
+    	return graph.getFlightTime(v, w);
+    }
+    
 
     // throw an IllegalArgumentException unless {@code 0 <= v < V}
     private void validateVertex(int v) {
