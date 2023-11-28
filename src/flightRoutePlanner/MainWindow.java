@@ -1,5 +1,6 @@
 package flightRoutePlanner;
 
+import edu.princeton.cs.algs4.BreadthFirstPaths;
 import edu.princeton.cs.algs4.Graph;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
@@ -22,22 +23,36 @@ public class MainWindow {
 		String delimiter = " ";
 		
 		FlightSymbolGraph flightGraph = new FlightSymbolGraph(filename, delimiter);
-		
         Graph graph = flightGraph.graph();
-        System.out.print("Airport code: ");
+        
+        System.out.print("Departure airport: ");
         while (StdIn.hasNextLine()) {
             String source = StdIn.readLine();
             if (flightGraph.contains(source)) {
-                int s = flightGraph.indexOf(source);
-                for (int v : graph.adj(s)) {
-                    StdOut.println("   " + flightGraph.nameOf(v));
-                }
+        		int s = flightGraph.indexOf(source);
+        		StdOut.println("The following destinations can be reached from " + source + ":");
+        		
+        		for (int i = 0; i < graph.V(); i++) {
+        			BreadthFirstPaths bfp = new BreadthFirstPaths(graph, s);
+                	
+        			if (bfp.hasPathTo(i)) {
+        				StdOut.print(flightGraph.nameOf(i) + ": ");
+        				for (int v : bfp.pathTo(i)) {
+        					if (v == i) 
+        						StdOut.print(flightGraph.nameOf(v));
+        					else
+        						StdOut.print(flightGraph.nameOf(v) + " > ");
+        				}
+        				StdOut.println();
+        			}
+        		}
+        		
             }
             else {
-                StdOut.println("   " + "Graph does not contain '" + source + "'");
+                StdOut.println("   " + source + " is not a valid airport");
             }
             StdOut.println();
-        	StdOut.print("Airport code: ");
+        	StdOut.print("Departure airport: ");
         }
 		
 	}
