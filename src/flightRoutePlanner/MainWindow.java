@@ -14,11 +14,45 @@ import edu.princeton.cs.algs4.StdOut;
  * @author Jesse Cherry  
  * @author Chanphone Visathip
  */
-public class MainWindow {
+public class MainWindow extends JFrame implements ActionListener {
+
+	private JButton cost = new JButton();
+	private JButton duration = new JButton();
+	private JButton clear = new JButton();
+	private JButton roundTrip = new JButton();
+	
+	public MainWindow() {
+		JFrame frame = new JFrame("Airport Selection");
+		frame.setSize(1920,1080);
+		frame.setLayout(null);
+		
+		//back ground image as a map 
+		String imagePath = "src/flightRoutePlanner/resources/map.png";
+        ImageIcon backgroundImage = new ImageIcon(imagePath);
+        JLabel backgroundLabel = new JLabel(backgroundImage);
+        frame.setContentPane(backgroundLabel);
+    
+        //dropdown menu
+        JComboBox<String> comboBox = new JComboBox<>();
+        comboBox.addItem("Option 1");
+        comboBox.addItem("Option 2");
+        comboBox.addItem("Option 3");
+
+        // Add the dropdown menu to the frame
+        frame.add(comboBox);
+
+        // Set the frame's size and make it visible
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+	}
 	
 	// TODO implement GUI
 
 	public static void main(String[] args) {
+		MainWindow gw = new MainWindow();  
+		 gw.setLocationRelativeTo(null);
+		
 		String filename = "Resources/Flights.txt";
 		String delimiter = " ";
 		
