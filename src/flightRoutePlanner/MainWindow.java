@@ -1,7 +1,7 @@
 package flightRoutePlanner;
 
+import java.util.ArrayList;
 import edu.princeton.cs.algs4.BreadthFirstPaths;
-import edu.princeton.cs.algs4.Graph;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
@@ -11,8 +11,8 @@ import edu.princeton.cs.algs4.StdOut;
  * creates a FlightSymbolGraph from a given file to create a graph of airports 
  * and flights.
  * 
- * @authors Jesse Cherry and Chanphone Visathip
- *
+ * @author Jesse Cherry  
+ * @author Chanphone Visathip
  */
 public class MainWindow {
 	
@@ -23,7 +23,7 @@ public class MainWindow {
 		String delimiter = " ";
 		
 		FlightSymbolGraph flightGraph = new FlightSymbolGraph(filename, delimiter);
-        Graph graph = flightGraph.graph();
+        DualWeightedGraph graph = flightGraph.graph();
         
         System.out.print("Departure airport: ");
         while (StdIn.hasNextLine()) {
@@ -37,16 +37,24 @@ public class MainWindow {
                 	
         			if (bfp.hasPathTo(i)) {
         				StdOut.print(flightGraph.nameOf(i) + ": ");
-        				for (int v : bfp.pathTo(i)) {
+        				double cost = 0.0;
+        				double flightTime = 0.0;
+        				Iterable<Integer> path = bfp.pathTo(i);
+        				int prevAirport = s;
+        				
+        				for (int v : path) {
         					if (v == i) 
         						StdOut.print(flightGraph.nameOf(v));
-        					else
+        					else 
         						StdOut.print(flightGraph.nameOf(v) + " > ");
+    						cost += flightGraph.getCost(v, prevAirport);
+    						flightTime += flightGraph.getFlightTime(v, prevAirport);
+        					prevAirport = v;
         				}
-        				StdOut.println();
+    					StdOut.printf("\n    Total cost: $%.2f \n", cost);
+    					StdOut.printf("    Total flight time: %.0f minutes \n", flightTime);
         			}
         		}
-        		
             }
             else {
                 StdOut.println("   " + source + " is not a valid airport");
