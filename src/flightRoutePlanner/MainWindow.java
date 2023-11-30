@@ -1,103 +1,103 @@
 package flightRoutePlanner;
 
-import java.util.ArrayList;
-import edu.princeton.cs.algs4.BreadthFirstPaths;
-import edu.princeton.cs.algs4.StdIn;
-import edu.princeton.cs.algs4.StdOut;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-/** 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+
+import edu.princeton.cs.algs4.BreadthFirstPaths;
+import edu.princeton.cs.algs4.Graph;
+
+/**
  * Class MainWindow is the driver for the FlightRoutePlanner app. It will use a
- * GUI to accept user input in the form of selecting an airport from a map. It 
- * creates a FlightSymbolGraph from a given file to create a graph of airports 
+ * GUI to accept user input in the form of selecting an airport from a map. It
+ * creates a FlightSymbolGraph from a given file to create a graph of airports
  * and flights.
  * 
- * @author Jesse Cherry  
- * @author Chanphone Visathip
+ * @authors Jesse Cherry and Chanphone Visathip
+ *
  */
 public class MainWindow extends JFrame implements ActionListener {
+	JTextArea lb;
 
 	private JButton cost = new JButton();
 	private JButton duration = new JButton();
 	private JButton clear = new JButton();
-	private JButton roundTrip = new JButton();
-	
-	public MainWindow() {
-		JFrame frame = new JFrame("Airport Selection");
-		frame.setSize(1920,1080);
-		frame.setLayout(null);
-		
-		//back ground image as a map 
-		String imagePath = "src/flightRoutePlanner/resources/map.png";
-        ImageIcon backgroundImage = new ImageIcon(imagePath);
-        JLabel backgroundLabel = new JLabel(backgroundImage);
-        frame.setContentPane(backgroundLabel);
-    
-        //dropdown menu
-        JComboBox<String> comboBox = new JComboBox<>();
-        comboBox.addItem("Option 1");
-        comboBox.addItem("Option 2");
-        comboBox.addItem("Option 3");
+	private JButton search = new JButton();
+	private static JComboBox<Object> depart = new JComboBox<>(AirportCode.values());
+	private static JComboBox<Object> arrival = new JComboBox<>(AirportCode.values());
+	static String filename = "src/flightRoutePlanner/resources/Flights.txt";
+	static String delimiter = " ";
+	static FlightSymbolGraph flightGraph = new FlightSymbolGraph(filename, delimiter);
+	static Graph graph = flightGraph.graph();
 
-        // Add the dropdown menu to the frame
-        frame.add(comboBox);
+	public MainWindow(String title) {
 
-        // Set the frame's size and make it visible
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+		super(title);
+		lb = new JTextArea();
+		this.setSize(1920, 1080);
+		this.setLayout(new FlowLayout());
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.add(new JLabel(new ImageIcon("src/flightRoutePlanner/resources/map.png")));
+
+		this.add(depart);
+		this.add(arrival);
+
+		search = new JButton("Search");
+		search.addActionListener(this);
+		this.add(search);
+
+		clear = new JButton("Clear");
+		clear.addActionListener(this);
+		this.add(clear);
+
+		this.setLocationRelativeTo(null);
+
+		this.setVisible(true);
 	}
-	
-	// TODO implement GUI
 
 	public static void main(String[] args) {
-		MainWindow gw = new MainWindow();  
-		 gw.setLocationRelativeTo(null);
-		
-		String filename = "Resources/Flights.txt";
-		String delimiter = " ";
-		
-		FlightSymbolGraph flightGraph = new FlightSymbolGraph(filename, delimiter);
-        DualWeightedGraph graph = flightGraph.graph();
-        
-        System.out.print("Departure airport: ");
-        while (StdIn.hasNextLine()) {
-            String source = StdIn.readLine();
-            if (flightGraph.contains(source)) {
-        		int s = flightGraph.indexOf(source);
-        		StdOut.println("The following destinations can be reached from " + source + ":");
-        		
-        		for (int i = 0; i < graph.V(); i++) {
-        			BreadthFirstPaths bfp = new BreadthFirstPaths(graph, s);
-                	
-        			if (bfp.hasPathTo(i)) {
-        				StdOut.print(flightGraph.nameOf(i) + ": ");
-        				double cost = 0.0;
-        				double flightTime = 0.0;
-        				Iterable<Integer> path = bfp.pathTo(i);
-        				int prevAirport = s;
-        				
-        				for (int v : path) {
-        					if (v == i) 
-        						StdOut.print(flightGraph.nameOf(v));
-        					else 
-        						StdOut.print(flightGraph.nameOf(v) + " > ");
-    						cost += flightGraph.getCost(v, prevAirport);
-    						flightTime += flightGraph.getFlightTime(v, prevAirport);
-        					prevAirport = v;
-        				}
-    					StdOut.printf("\n    Total cost: $%.2f \n", cost);
-    					StdOut.printf("    Total flight time: %.0f minutes \n", flightTime);
-        			}
-        		}
-            }
-            else {
-                StdOut.println("   " + source + " is not a valid airport");
-            }
-            StdOut.println();
-        	StdOut.print("Departure airport: ");
-        }
-		
+		MainWindow gw = new MainWindow("Flight Route Planner");
+		gw.setLocationRelativeTo(null);
+
 	}
 
+	private void showPath() {
+		String airportA = depart.getSelectedItem().toString();
+		String airportB = arrival.getSelectedItem().toString();
+		int s = flightGraph.indexOf(airportA);
+		int a = flightGraph.indexOf(airportB);
+		BreadthFirstPaths bfp = new BreadthFirstPaths(graph, s);
+
+		if (bfp.hasPathTo(a)) {
+			StringBuilder pathBuilder = new StringBuilder();
+			for (int v : bfp.pathTo(a)) {
+				if (v == a) {
+					pathBuilder.append(flightGraph.nameOf(v));
+				} else {
+					pathBuilder.append(flightGraph.nameOf(v)).append(" -> ");
+				}
+			}
+			lb.setText(pathBuilder.toString());
+			this.add(lb);
+		}
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		if (e.getSource() == search) {
+			showPath();
+		} else if (e.getSource() == clear) {
+
+		}
+
+	}
 }
- 
