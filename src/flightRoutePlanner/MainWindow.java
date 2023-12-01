@@ -11,8 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
-import edu.princeton.cs.algs4.BreadthFirstPaths;
-import edu.princeton.cs.algs4.Graph;
+import edu.princeton.cs.algs4.DijkstraUndirectedSP;
+import edu.princeton.cs.algs4.Edge;
+import edu.princeton.cs.algs4.EdgeWeightedGraph;
+import edu.princeton.cs.algs4.Queue;
 
 /**
  * Class MainWindow is the driver for the FlightRoutePlanner app. It will use a
@@ -32,22 +34,24 @@ public class MainWindow extends JFrame implements ActionListener {
 	private JButton search = new JButton();
 	private static JComboBox<Object> depart = new JComboBox<>(AirportCode.values());
 	private static JComboBox<Object> arrival = new JComboBox<>(AirportCode.values());
-	static String filename = "src/flightRoutePlanner/resources/Flights.txt";
+	private static JComboBox<Object> preference = new JComboBox<>(new String[]{"Lower cost", "Shorter flight time"});
+	static String filename = "Resources/Flights.txt";
 	static String delimiter = " ";
-	static FlightSymbolGraph flightGraph = new FlightSymbolGraph(filename, delimiter);
-	static Graph graph = flightGraph.graph();
+	static FlightSymbolGraph flightGraph;	// = new FlightSymbolGraph(filename, delimiter);
+	static EdgeWeightedGraph graph;	// = flightGraph.graph();
 
 	public MainWindow(String title) {
 
 		super(title);
 		lb = new JTextArea();
-		this.setSize(1920, 1080);
+		this.setSize(1450, 750);
 		this.setLayout(new FlowLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.add(new JLabel(new ImageIcon("src/flightRoutePlanner/resources/map.png")));
+		this.add(new JLabel(new ImageIcon("Resources/flightMap.jpg")));
 
 		this.add(depart);
 		this.add(arrival);
+		this.add(preference);
 
 		search = new JButton("Search");
 		search.addActionListener(this);
@@ -71,23 +75,59 @@ public class MainWindow extends JFrame implements ActionListener {
 	private void showPath() {
 		String airportA = depart.getSelectedItem().toString();
 		String airportB = arrival.getSelectedItem().toString();
+		if (preference.getSelectedItem().toString().equals("Lower cost")) {
+			flightGraph = new FlightSymbolGraph(filename, delimiter, 0);
+		}
+		else {
+			flightGraph = new FlightSymbolGraph(filename, delimiter, 1);
+		}
+		graph = flightGraph.graph();
 		int s = flightGraph.indexOf(airportA);
 		int a = flightGraph.indexOf(airportB);
-		BreadthFirstPaths bfp = new BreadthFirstPaths(graph, s);
+		
+		DijkstraUndirectedSP dijkstra = new DijkstraUndirectedSP(graph, s);
+		//BreadthFirstPaths bfp = new BreadthFirstPaths(graph, s);
 
-		if (bfp.hasPathTo(a)) {
-			StringBuilder pathBuilder = new StringBuilder();
-			for (int v : bfp.pathTo(a)) {
-				if (v == a) {
-					pathBuilder.append(flightGraph.nameOf(v));
-				} else {
-					pathBuilder.append(flightGraph.nameOf(v)).append(" -> ");
-				}
+		if (dijkstra.hasPathTo(a)) {
+			Queue<String> queue = routeBuilder(dijkstra, s, a);
+			StringBuilder path = new StringBuilder();
+			for (String str : queue) {
+				path.append(str);
 			}
-			lb.setText(pathBuilder.toString());
+			lb.setText(path.toString());
+			System.out.println(path.toString());
 			this.add(lb);
 		}
 
+	}
+	
+	private Queue<String> routeBuilder(DijkstraUndirectedSP dijkstra, int d, int a) {
+		Queue<String> queue = new Queue<String>();
+        int prevAirportV = -1;
+		int prevAirportW = -1;
+
+        for (Edge e : dijkstra.pathTo(a)) {
+        	int v = e.either();
+        	int w = e.other(v);
+        	
+        	if (v == d) 
+        		queue.enqueue(flightGraph.nameOf(v) + " > ");
+        	if (w == d) 
+        		queue.enqueue(flightGraph.nameOf(w) + " > ");
+        	if (v == prevAirportV || v == prevAirportW) 
+        		queue.enqueue(flightGraph.nameOf(v) + " > ");
+        	if (w == prevAirportV || w == prevAirportW) 
+        		queue.enqueue(flightGraph.nameOf(w) + " > ");
+        	if (v == a) 
+        		queue.enqueue(flightGraph.nameOf(v));
+        	if (w == a) 
+        		queue.enqueue(flightGraph.nameOf(w));
+        	
+        	prevAirportV = v;
+        	prevAirportW = w;
+        }
+        
+        return queue;
 	}
 
 	@Override
