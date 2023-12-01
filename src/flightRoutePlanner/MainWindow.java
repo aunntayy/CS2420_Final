@@ -9,13 +9,11 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
 
 import edu.princeton.cs.algs4.DijkstraUndirectedSP;
 import edu.princeton.cs.algs4.Edge;
 import edu.princeton.cs.algs4.EdgeWeightedGraph;
 import edu.princeton.cs.algs4.Queue;
-import edu.princeton.cs.algs4.StdOut;
 
 /**
  * Class MainWindow is the driver for the FlightRoutePlanner app. It will use a
@@ -23,20 +21,22 @@ import edu.princeton.cs.algs4.StdOut;
  * creates a FlightSymbolGraph from a given file to create a graph of airports
  * and flights.
  * 
- * @author Jesse Cherry 
+ * @author Jesse Cherry
  * @author Chanphone Visathip
  *
  */
 public class MainWindow extends JFrame implements ActionListener {
-	private JTextArea route= new JTextArea();
-	private JTextArea costText = new JTextArea();
-	private JTextArea timeText = new JTextArea();
+	private JLabel from = new JLabel("Departure");
+	private JLabel to = new JLabel("Arrival");
+	private JLabel route = new JLabel();
+	private JLabel costText = new JLabel();
+	private JLabel timeText = new JLabel();
 	private JButton search = new JButton();
 	private static JComboBox<Object> depart = new JComboBox<>(AirportCode.values());
 	private static JComboBox<Object> arrival = new JComboBox<>(AirportCode.values());
-	private static JComboBox<Object> preference = new JComboBox<>(new String[]{"Lower cost", "Shorter flight time"});
-	private static String filename = "Resources/Flights.txt";
-	private static String delimiter = " ";
+	private static JComboBox<Object> preference = new JComboBox<>(new String[] { "Lower cost", "Shorter flight time" });
+	private static String filename = "src/flightRoutePlanner/resources/Flights.txt";
+	private static String delimiter = ",";
 	private static FlightSymbolGraph costFlightGraph;
 	private static FlightSymbolGraph timeFlightGraph;
 	private static EdgeWeightedGraph costGraph;
@@ -48,27 +48,22 @@ public class MainWindow extends JFrame implements ActionListener {
 		this.setSize(1450, 750);
 		this.setLayout(new FlowLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.add(new JLabel(new ImageIcon("Resources/flightMap.jpg")));
-
+		
+		this.add(from);
 		this.add(depart);
+		this.add(to);
 		this.add(arrival);
 		this.add(preference);
 
 		search = new JButton("Search");
 		search.addActionListener(this);
 		this.add(search);
-
+		this.add(new JLabel(new ImageIcon("src/flightRoutePlanner/resources/map.png")));
 		this.setLocationRelativeTo(null);
 
 		this.setVisible(true);
 	}
-
-	public static void main(String[] args) {
-		MainWindow gw = new MainWindow("Flight Route Planner");
-		gw.setLocationRelativeTo(null);
-
-	}
-
+	
 	private void showPath() {
 		String airportA = depart.getSelectedItem().toString();
 		String airportB = arrival.getSelectedItem().toString();
@@ -76,28 +71,27 @@ public class MainWindow extends JFrame implements ActionListener {
 		timeFlightGraph = new FlightSymbolGraph(filename, delimiter, 1);
 		costGraph = costFlightGraph.graph();
 		timeGraph = timeFlightGraph.graph();
-		
+
 		int s = costFlightGraph.indexOf(airportA);
 		int a = costFlightGraph.indexOf(airportB);
-		
 
 		DijkstraUndirectedSP dijkstraCost = new DijkstraUndirectedSP(costGraph, s);
 		DijkstraUndirectedSP dijkstraTime = new DijkstraUndirectedSP(timeGraph, s);
-		
-		
 
 		if (!dijkstraCost.hasPathTo(a)) {
 			route.setText("No route from " + airportA + " to " + airportB);
 		}
 
-		routeOutput(s, a, dijkstraCost);
-		routeOutput(s, a, dijkstraTime);
+		if (preference.getSelectedItem().toString().equals("Lower cost"))
+			routeOutput(s, a, dijkstraCost);
+		else
+			routeOutput(s, a, dijkstraTime);
 
 		int cost = 0;
 		int time = 0;
-		
+
 		if (preference.getSelectedItem().toString().equals("Lower cost")) {
-	        cost = (int) dijkstraCost.distTo(a);
+			cost = (int) dijkstraCost.distTo(a);
 			for (Edge e : dijkstraCost.pathTo(a)) {
 				int v = e.either();
 				int w = e.other(v);
@@ -109,9 +103,8 @@ public class MainWindow extends JFrame implements ActionListener {
 					}
 				}
 			}
-		}
-		else {
-	        time = (int) dijkstraTime.distTo(a);
+		} else {
+			time = (int) dijkstraTime.distTo(a);
 			for (Edge e : dijkstraTime.pathTo(a)) {
 				int v = e.either();
 				int w = e.other(v);
@@ -122,24 +115,24 @@ public class MainWindow extends JFrame implements ActionListener {
 						cost += f.weight();
 					}
 				}
-			} 
+			}
 		}
-		
-		
+
 		String costStr = ("Total cost: $" + cost);
-        int hrs = time / 60;
-    	String hours = null;
-    	if (hrs > 1)
-    		hours = " hours";
-    	if (hrs == 1) 
-    		hours = " hour";
-    	int min = time % 60;
-    	String timeStr = ("Total flight time: " + hrs + hours + " " + min + " min");
-    	costText.setText(costStr);
-        this.add(costText);
-        timeText.setText(timeStr);
-        this.add(timeText);
-    }
+		int hrs = time / 60;
+		String hours = null;
+		if (hrs > 1)
+			hours = " hours";
+		if (hrs == 1)
+			hours = " hour";
+		int min = time % 60;
+		String timeStr = ("Total flight time: " + hrs + hours + " " + min + " min");
+		costText.setText(costStr);
+		costText.enableInputMethods(false);
+		this.add(costText);
+		timeText.setText(timeStr);
+		this.add(timeText);
+	}
 
 	/**
 	 * @param s
@@ -152,48 +145,54 @@ public class MainWindow extends JFrame implements ActionListener {
 		for (String str : queue) {
 			path.append(str);
 		}
-		if (preference.getSelectedItem().toString().equals("Lower cost")) {
-			route.setText(path.toString());
-			this.add(route);
-		}
+		route.setText(path.toString());
+		this.add(route);
+
 	}
+
 	
 	private Queue<String> routeBuilder(DijkstraUndirectedSP dijkstra, int d, int a) {
 		Queue<String> queue = new Queue<String>();
-        int prevAirportV = -1;
+		int prevAirportV = -1;
 		int prevAirportW = -1;
 
-        for (Edge e : dijkstra.pathTo(a)) {
-        	int v = e.either();
-        	int w = e.other(v);
-        	
-        	if (v == d) 
-        		queue.enqueue(costFlightGraph.nameOf(v) + " > ");
-        	if (w == d) 
-        		queue.enqueue(costFlightGraph.nameOf(w) + " > ");
-        	if (v == prevAirportV || v == prevAirportW) 
-        		queue.enqueue(costFlightGraph.nameOf(v) + " > ");
-        	if (w == prevAirportV || w == prevAirportW) 
-        		queue.enqueue(costFlightGraph.nameOf(w) + " > ");
-        	if (v == a) 
-        		queue.enqueue(costFlightGraph.nameOf(v));
-        	if (w == a) 
-        		queue.enqueue(costFlightGraph.nameOf(w));
-        	
-        	prevAirportV = v;
-        	prevAirportW = w;
-        }
-        return queue;
+		for (Edge e : dijkstra.pathTo(a)) {
+			int v = e.either();
+			int w = e.other(v);
+
+			if (v == d)
+				queue.enqueue(costFlightGraph.nameOf(v) + " > ");
+			if (w == d)
+				queue.enqueue(costFlightGraph.nameOf(w) + " > ");
+			if (v == prevAirportV || v == prevAirportW)
+				queue.enqueue(costFlightGraph.nameOf(v) + " > ");
+			if (w == prevAirportV || w == prevAirportW)
+				queue.enqueue(costFlightGraph.nameOf(w) + " > ");
+			if (v == a)
+				queue.enqueue(costFlightGraph.nameOf(v));
+			if (w == a)
+				queue.enqueue(costFlightGraph.nameOf(w));
+
+			prevAirportV = v;
+			prevAirportW = w;
+		}
+		return queue;
 	}
 
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		if (e.getSource() == search) {
 			showPath();
 		}
-		
+
 	}
 	
+	public static void main(String[] args) {
+		MainWindow gw = new MainWindow("Flight Route Planner");
+		gw.setLocationRelativeTo(null);
+
+	}
+	
+	
+
 }
