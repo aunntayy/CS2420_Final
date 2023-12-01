@@ -27,10 +27,11 @@ public class MainApp {
 	public static void main(String[] args) {
 		String filename = "Resources/Flights.txt";
 		String delimiter = " ";
-		
-		FlightSymbolGraph flightSymbolGraph;
-		EdgeWeightedGraph weightedGraph;
-		DijkstraUndirectedSP dijkstra;
+
+		FlightSymbolGraph costFlightGraph;
+		FlightSymbolGraph timeFlightGraph;
+		EdgeWeightedGraph costGraph;
+		EdgeWeightedGraph timeGraph;
 		SymbolGraph sg = new SymbolGraph(filename, delimiter); 
         
         StdOut.println("Prefer lower 'cost' or shorter flight 'time'?");
@@ -43,25 +44,75 @@ public class MainApp {
 			int arrive = sg.indexOf(arrival);
 			
 			// create FlightSymbolGraph based on desired weight
-			if (preferCost) {
-				flightSymbolGraph = new FlightSymbolGraph(filename, delimiter, 0);
-		        weightedGraph = flightSymbolGraph.graph();
-			}
-			else {
-				flightSymbolGraph = new FlightSymbolGraph(filename, delimiter, 1);
-		        weightedGraph = flightSymbolGraph.graph();
-			}
+			costFlightGraph = new FlightSymbolGraph(filename, delimiter, 0);
+	        costGraph = costFlightGraph.graph();
+			timeFlightGraph = new FlightSymbolGraph(filename, delimiter, 1);
+	        timeGraph = timeFlightGraph.graph();
 			
 			// find shortest path according to weight
-	        dijkstra = new DijkstraUndirectedSP(weightedGraph, depart);
-	        if (!dijkstra.hasPathTo(arrive)) {
+	        DijkstraUndirectedSP dijkstraCost = new DijkstraUndirectedSP(costGraph, depart);
+	        DijkstraUndirectedSP dijkstraTime = new DijkstraUndirectedSP(timeGraph, depart);
+	        if (!dijkstraCost.hasPathTo(arrive)) {
 	        	StdOut.printf("No path from %s to %s. Please try again.", departure, arrival);
 	        	continue;
 	        }
 	        StdOut.println();
-
-	        printRoute(dijkstra, sg, depart, arrive);
 	        
+	        
+	        int cost = 0;
+			int time = 0;
+			
+			if (preferCost) {
+		        printRoute(dijkstraCost, sg, depart, arrive);
+		        
+		        cost = (int) dijkstraCost.distTo(arrive);
+		        
+				for (Edge e : dijkstraCost.pathTo(arrive)) {
+					int v = e.either();
+					int w = e.other(v);
+					for (Edge f : timeGraph.edges()) {
+						int x = f.either();
+						int y = f.other(x);
+						if ((x == v && y == w) || (y == v && x == w)) {
+							time += f.weight();
+						}
+					}
+				}
+			}
+			else {
+		        printRoute(dijkstraTime, sg, depart, arrive);
+		        
+		        time = (int) dijkstraTime.distTo(arrive);
+		        
+				for (Edge e : dijkstraTime.pathTo(arrive)) {
+					int v = e.either();
+					int w = e.other(v);
+					for (Edge f : costGraph.edges()) {
+						int x = f.either();
+						int y = f.other(x);
+						if ((x == v && y == w) || (y == v && x == w)) {
+							cost += f.weight();
+						}
+					}
+				} 
+			}
+			
+			
+			String costStr = ("Total cost: $" + cost);
+	        int hrs = time / 60;
+	    	String hours = null;
+	    	if (hrs > 1)
+	    		hours = " hours";
+	    	if (hrs == 1) 
+	    		hours = " hour";
+	    	int min = time % 60;
+	    	String timeStr = ("Total flight time: " + hrs + hours + " " + min + " min");
+	    	StdOut.println(costStr);
+	        StdOut.println(timeStr);
+	        
+	        
+	        
+	        /*
 	        int weight = (int) dijkstra.distTo(arrive);
 	        
 	        if (preferCost) {
@@ -69,9 +120,15 @@ public class MainApp {
 	        }
 	        else {
 	        	int hrs = weight / 60;
+	        	String hours = null;
+	        	if (hrs > 1)
+	        		hours = " hours";
+	        	if (hrs == 1) 
+	        		hours = " hour";
 	        	int min = weight % 60;
-	        	StdOut.printf("Total flight time: %d hours %d minutes %n", hrs, min);
+	        	StdOut.printf("Total flight time: %d%s %d minutes %n", hrs, hours, min);
 	        }
+	        */
 	        
 	        StdOut.println();
 	        StdOut.println("----------------------------------------------");
