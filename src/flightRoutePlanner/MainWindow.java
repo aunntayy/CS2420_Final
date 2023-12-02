@@ -33,8 +33,8 @@ public class MainWindow extends JFrame implements ActionListener {
 	private static JComboBox<Object> depart = new JComboBox<>(AirportCode.values());
 	private static JComboBox<Object> arrival = new JComboBox<>(AirportCode.values());
 	private static JComboBox<Object> preference = new JComboBox<>(new String[]{"Lower cost", "Shorter flight time"});
-	private static String filename = "Resources/Flights.txt";
-	private static String delimiter = " ";
+	private static String filename = "src/flightRoutePlanner/resources/Flights.txt";
+	private static String delimiter = ",";
 	private static FlightSymbolGraph costFlightGraph;
 	private static FlightSymbolGraph timeFlightGraph;
 	private static EdgeWeightedGraph costGraph;
@@ -57,21 +57,19 @@ public class MainWindow extends JFrame implements ActionListener {
 	 */
 	public MainWindow(String title) {
 		super(title);
-		this.setSize(1450, 750);
-		getContentPane().setLayout(new FlowLayout());
+		this.setSize(1920, 1080);
+		this.setLayout(new FlowLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		getContentPane().add(new JLabel(new ImageIcon("Resources/flightMap.jpg")));
-
-		getContentPane().add(depart);
-		getContentPane().add(arrival);
-		getContentPane().add(preference);
+		
+		this.add(depart);
+		this.add(arrival);
+		this.add(preference);
 
 		search = new JButton("Search");
 		search.addActionListener(this);
-		getContentPane().add(search);
-		
-		getContentPane().add(panel);
-
+		this.add(search);
+		this.add(panel);
+		this.add(new JLabel(new ImageIcon("src/flightRoutePlanner/resources/map.png")));
 		this.setLocationRelativeTo(null);
 
 		this.setVisible(true);
@@ -171,9 +169,9 @@ public class MainWindow extends JFrame implements ActionListener {
     	String timeStr = ("Total flight time: " + hrs + hours + " " + min + " min");
 		String costStr = ("Total cost: $" + cost);
     	costText.setText(costStr);
-        getContentPane().add(costText);
+        this.add(costText);
         timeText.setText(timeStr);
-        getContentPane().add(timeText);
+        this.add(timeText);
     }
 
 	/**
@@ -189,7 +187,7 @@ public class MainWindow extends JFrame implements ActionListener {
 			path.append(str);
 		}
 		route.setText(path.toString());
-		getContentPane().add(route);
+		this.add(route);
 	}
 	
 	/**
