@@ -3,7 +3,6 @@ package flightRoutePlanner;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Edge;
 import edu.princeton.cs.algs4.EdgeWeightedGraph;
-import edu.princeton.cs.algs4.Graph;
 import edu.princeton.cs.algs4.ST;
 
 /******************************************************************************
