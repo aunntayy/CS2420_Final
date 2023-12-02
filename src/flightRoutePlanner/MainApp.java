@@ -61,12 +61,18 @@ public class MainApp {
 	        
 	        int cost = 0;
 			int time = 0;
-			
+
+			// if user prefers cost
 			if (preferCost) {
+				// set cost to cost Dijkstra's distance to a
 		        printRoute(dijkstraCost, sg, depart, arrive);
 		        
+	        	
+				// set cost to cost Dijkstra's distance to a
 		        cost = (int) dijkstraCost.distTo(arrive);
-		        
+				
+		        // for each edge on cost Dijkstra's path to a,
+	        	// get weight from time Dijkstra's corresponding edge
 				for (Edge e : dijkstraCost.pathTo(arrive)) {
 					int v = e.either();
 					int w = e.other(v);
@@ -79,11 +85,16 @@ public class MainApp {
 					}
 				}
 			}
+			// if user prefers time
 			else {
 		        printRoute(dijkstraTime, sg, depart, arrive);
 		        
+				// set time to time Dijkstra's distance to a
 		        time = (int) dijkstraTime.distTo(arrive);
-		        
+
+				
+		        // for each edge on time Dijkstra's path to a,
+		        // get weight from cost Dijkstra's corresponding edge
 				for (Edge e : dijkstraTime.pathTo(arrive)) {
 					int v = e.either();
 					int w = e.other(v);
@@ -109,26 +120,6 @@ public class MainApp {
 	    	String timeStr = ("Total flight time: " + hrs + hours + " " + min + " min");
 	    	StdOut.println(costStr);
 	        StdOut.println(timeStr);
-	        
-	        
-	        
-	        /*
-	        int weight = (int) dijkstra.distTo(arrive);
-	        
-	        if (preferCost) {
-	        	StdOut.println("Total cost: $" + weight);
-	        }
-	        else {
-	        	int hrs = weight / 60;
-	        	String hours = null;
-	        	if (hrs > 1)
-	        		hours = " hours";
-	        	if (hrs == 1) 
-	        		hours = " hour";
-	        	int min = weight % 60;
-	        	StdOut.printf("Total flight time: %d%s %d minutes %n", hrs, hours, min);
-	        }
-	        */
 	        
 	        StdOut.println();
 	        StdOut.println("----------------------------------------------");
