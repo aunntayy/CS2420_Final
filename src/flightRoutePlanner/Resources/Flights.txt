@@ -1,32 +1,32 @@
 15
 30
-SEA SFO 59 135
-SEA LAX 38 165
-SEA LAS 19 155
-SEA SLC 43 125
-SEA MSP 82 200
-SFO LAX 42 90
-LAX LAS 20 75
-LAX DFW 58 185
-LAX JFK 119 325
-LAS PHX 19 75
-LAS SLC 19 90
-PHX DEN 19 110
-SLC DEN 19 95
-SLC DFW 39 180
-SLC MSP 39 155
-DEN DFW 19 120
-DEN MSP 19 115
-DFW IAH 71 75
-DFW ATL 19 125
-DFW JFK 95 180
-IAH ATL 30 125
-IAH MIA 31 145
-MSP ORD 71 95
-MSP DTW 53 105
-MSP JFK 157 170
-ORD DTW 71 85
-DTW JFK 99 115
-ATL JFK 79 140
-ATL MIA 19 115
-JFK MIA 79 195
+Seattle-Tacoma International Airport,San Francisco International Airport,59,135
+Seattle-Tacoma International Airport,Los Angeles International Airport,38,165
+Seattle-Tacoma International Airport,Harry Reid International Airport,19,155
+Seattle-Tacoma International Airport,Salt Lake City International Airport,43,125
+Seattle-Tacoma International Airport,Minneapolis-St Paul International Airport,82,200
+San Francisco International Airport,Los Angeles International Airport,42,90
+Los Angeles International Airport,Harry Reid International Airport,20,75
+Los Angeles International Airport,Dallas/Fort Worth International Airport,58,185
+Los Angeles International Airport,John F. Kennedy International Airport,119,325
+Harry Reid International Airport,Phoenix Sky Harbor International Airport,19,75
+Harry Reid International Airport,Salt Lake City International Airport,19,90
+Phoenix Sky Harbor International Airport,Denver International Airport,19,110
+Salt Lake City International Airport,Denver International Airport,19,95
+Salt Lake City International Airport,Dallas/Fort Worth International Airport,39,180
+Salt Lake City International Airport,Minneapolis-St Paul International Airport,39,155
+Denver International Airport,Dallas/Fort Worth International Airport,19,120
+Denver International Airport,Minneapolis-St Paul International Airport,19,115
+Dallas/Fort Worth International Airport,George Bush Intercontinental Airport,71,75
+Dallas/Fort Worth International Airport,Hartsfield-Jackson Atlanta International Airport,19,125
+Dallas/Fort Worth International Airport,John F. Kennedy International Airport,300,180
+George Bush Intercontinental Airport,Hartsfield-Jackson Atlanta International Airport,30,125
+George Bush Intercontinental Airport,Miami International Airport,31,145
+Minneapolis-St Paul International Airport,O'Hare International Airport,71,95
+Minneapolis-St Paul International Airport,Detroit Metropolitan Airport,53,105
+Minneapolis-St Paul International Airport,John F. Kennedy International Airport,157,170
+O'Hare International Airport,Detroit Metropolitan Airport,71,85
+Detroit Metropolitan Airport,John F. Kennedy International Airport,99,115
+Hartsfield-Jackson Atlanta International Airport,John F. Kennedy International Airport,79,140
+Hartsfield-Jackson Atlanta International Airport,Miami International Airport,19,115
+John F. Kennedy International Airport,Miami International Airport,79,195
