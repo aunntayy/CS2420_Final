@@ -12,17 +12,14 @@ import edu.princeton.cs.algs4.ST;
  *  vertex names are strings representing airports. Edges are representative of 
  *  flights.
  *  By providing mappings between string vertex names and integers,
- *  it serves as a wrapper around the
- *  {@link Graph} data type, which assumes the vertex names are integers
- *  between 0 and <em>V</em> - 1.
- *  It also supports initializing a symbol graph from a file.
+ *  it serves as a wrapper around the {@link EdgeWeightedGraph} data type, which 
+ *  assumes the vertex names are integers between 0 and <em>V</em> - 1.
+ *  Flight symbol graphs are initialized from a file.
  *  <p>
  *  This implementation uses an {@link ST} to map from strings to integers,
- *  an array to map from integers to strings, and a {@link Graph} to store
- *  the underlying graph.
- *  For additional documentation, see <a href="https://algs4.cs.princeton.edu/41graph">Section 4.1</a> of
- *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
- *
+ *  an array to map from integers to strings, and a {@link EdgeWeightedGraph} to 
+ *  store the underlying graph.
+ *  
  *	Based on code by Robert Sedgewick and Kevin Wayne.	
  *
  *	@author Jesse Cherry
@@ -37,7 +34,9 @@ public class FlightSymbolGraph {
     
     
     /**
-     * Initializes a graph from a file using the specified delimiter.
+     * Initializes a graph from a file using the specified delimiter. Depending 
+     * on the desired weightType, edge weights are set to either the cost or
+     * duration of a flight.
      * Each line in the file contains the name of a vertex, followed an adjacent
      * vertex and two weights (cost and time respectively), separated by the delimiter.
      * @param filename the name of the file
@@ -53,7 +52,6 @@ public class FlightSymbolGraph {
         // First pass builds the index by reading strings to associate
         // distinct strings with an index
         In in = new In(filename);
-        // while (in.hasNextLine()) {
         while (!in.isEmpty()) {
             String[] a = in.readLine().split(delimiter);
             for (int i = 0; i < a.length; i++) {
@@ -79,11 +77,11 @@ public class FlightSymbolGraph {
                 int w = st.get(a[i]);
                 int cost = Integer.parseInt(a[i + 1]);
                 int flightTime = Integer.parseInt(a[i + 2]);
-                // if cost
+                // if cost is desired weight
                 if (weightType == 0) {
                     graph.addEdge(new Edge(v, w, cost));
                 }
-                // if time
+                // if time is desired weight
                 else {
                 	graph.addEdge(new Edge(v, w, flightTime));
                 }
@@ -91,7 +89,6 @@ public class FlightSymbolGraph {
         }
     }
 
-    
     /**
      * Does the graph contain the vertex named {@code s}?
      * @param s the name of a vertex
@@ -100,7 +97,6 @@ public class FlightSymbolGraph {
     public boolean contains(String s) {
         return st.contains(s);
     }
-    
 
     /**
      * Returns the integer associated with the vertex named {@code s}.
@@ -123,11 +119,10 @@ public class FlightSymbolGraph {
         return keys[v];
     }
 
-    
     /**
-     * Returns the graph associated with the symbol graph. It is the client's responsibility
-     * not to mutate the graph.
-     * @return the graph associated with the symbol graph
+     * Returns the edge-weighted graph associated with the symbol graph. It is 
+     * the client's responsibility not to mutate the graph.
+     * @return the edge-weighted graph associated with the symbol graph
      */
     public EdgeWeightedGraph graph() {
         return graph;
